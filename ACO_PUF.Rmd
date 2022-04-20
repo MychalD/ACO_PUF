@@ -1,0 +1,184 @@
+---
+title: "ACO_PUF"
+output: html_notebook
+chunk_output_type: console
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(dplyr)
+```
+
+```{r}
+cms_puf <- read.csv("Performance_Year_Financial_and_Quality_Results_2020.csv") %>% 
+  clean_names()
+```
+
+```{r}
+basic_a <- cms_puf %>% 
+  filter(current_basic_a == 1) %>% 
+  mutate(saving_diff = sav_rate - min_sav_perc)
+
+basic_a_aco_size <- basic_a %>% 
+ mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                             between(n_ab,20000,50000) ~"medium",
+                             n_ab > 50000 ~ "large"),
+        
+       aco_save_diff = case_when(sav_rate > 0 ~ "saving",
+                                   sav_rate < 0 ~ "non-saving"))
+
+
+ggplot(data = basic_a_aco_size,
+       mapping = aes(x=aco_id,
+                     y=sav_rate))+
+  geom_point()+
+  facet_grid(~ aco_size)+
+  labs(title = "ACO Savings by Size",
+       x="ACO ID",
+       y="Savings")
+```
+
+```{r}
+basic_a_aco_size %>% 
+  count(aco_size,aco_save_diff) %>% 
+  ggplot( aes(x=n,
+                       y=aco_size))+
+  geom_col()+
+  facet_wrap(~ aco_save_diff)+
+  coord_flip()
+
+```
+
+
+
+
+
+```{r}
+basic_b <- cms_puf %>% 
+  filter(current_basic_b == 1) %>% 
+ mutate(saving_diff = sav_rate - min_sav_perc)
+
+
+basic_b_aco_size <- basic_b %>% 
+ mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                             between(n_ab,20000,50000) ~"medium",
+                             n_ab > 50000 ~ "large"),
+
+     aco_save_diff = case_when(sav_rate > 0 ~ "saving",
+                                   sav_rate < 0 ~ "non-saving"))
+
+ggplot(data = basic_b_aco_size,
+       mapping = aes(x=aco_id,
+                     y=aco_save_diff))+
+  geom_point()+
+  facet_wrap(~ aco_size)+
+  labs(title = "ACO Savings by Size",
+       x="ACO ID",
+       y="Savings")
+```
+
+
+```{r}
+basic_c <- cms_puf %>% 
+  filter(current_basic_c == 1) %>% 
+ mutate(saving_diff = sav_rate - min_sav_perc)
+
+
+basic_c_aco_size <- basic_c %>% 
+ mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                             between(n_ab,20000,50000) ~"medium",
+                             n_ab > 50000 ~ "large"),
+        
+             aco_save_diff = case_when(sav_rate > 0 ~ "saving",
+                                   sav_rate < 0 ~ "non-saving"))
+
+
+ggplot(data = basic_c_aco_size,
+       mapping = aes(x=aco_id,
+                     y=aco_save_diff))+
+  geom_point()+
+  facet_wrap(~ aco_size)+
+  labs(title = "ACO Savings by Size",
+       x="ACO ID",
+       y="Savings")
+```
+
+
+```{r}
+basic_d <- cms_puf %>% 
+  filter(current_basic_d == 1)%>% 
+ mutate(saving_diff = sav_rate - min_sav_perc)
+
+basic_d_aco_size <- basic_d %>% 
+ mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                             between(n_ab,20000,50000) ~"medium",
+                             n_ab > 50000 ~ "large"),
+        
+             aco_save_diff = case_when(sav_rate > 0 ~ "saving",
+                                   sav_rate < 0 ~ "non-saving"))
+
+
+ggplot(data = basic_d_aco_size,
+       mapping = aes(x=aco_id,
+                     y=aco_save_diff))+
+  geom_point()+
+  facet_wrap(~ aco_size)+
+  labs(title = "ACO Savings by Size",
+       x="ACO ID",
+       y="Savings")
+```
+
+
+```{r}
+basic_e <- cms_puf %>% 
+  filter(current_basic_e == 1)%>% 
+ mutate(saving_diff = sav_rate - min_sav_perc)
+
+basic_e_aco_size <- basic_e %>% 
+ mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                             between(n_ab,20000,50000) ~"medium",
+                             n_ab > 50000 ~ "large"),
+        
+             aco_save_diff = case_when(sav_rate > 0 ~ "saving",
+                                   sav_rate < 0 ~ "non-saving"))
+
+ggplot(data = basic_e_aco_size,
+       mapping = aes(x=aco_id,
+                     y=aco_save_diff))+
+  geom_point()+
+  facet_wrap(~ aco_size)+
+  labs(title = "ACO Savings by Size",
+       x="ACO ID",
+       y="Savings")
+```
+
+
+```{r}
+current_enhanced <- cms_puf %>% 
+  filter(current_enhanced == 1)%>% 
+ mutate(saving_diff = sav_rate - min_sav_perc)
+
+basic_enhanced_aco_size <- current_enhanced %>% 
+ mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                             between(n_ab,20000,50000) ~"medium",
+                             n_ab > 50000 ~ "large"),
+        
+             aco_save_diff = case_when(sav_rate > 0 ~ "saving",
+                                   sav_rate < 0 ~ "non-saving"))
+
+ggplot(data = basic_enhanced_aco_size,
+       mapping = aes(x=aco_id,
+                     y=aco_save_diff))+
+  geom_point()+
+  facet_wrap(~ aco_size)+
+  labs(title = "ACO Savings by Size",
+       x="ACO ID",
+       y="Savings")
+
+
+
+```
+
