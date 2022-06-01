@@ -1,0 +1,35 @@
+library(tidyverse)
+library(janitor)
+library(dplyr)
+library(ggtext)
+library(usethis)
+
+cms_puf <- read.csv("Performance_Year_Financial_and_Quality_Results_2020.csv") %>% 
+  clean_names()
+
+
+basic_function <- function(aco_type){
+  cms_puf %>% 
+    filter({{aco_type}} == 1) %>% 
+    mutate(saving_diff = sav_rate - min_sav_perc) %>% 
+    mutate(aco_size = case_when(n_ab < 20000 ~ "small",
+                                between(n_ab,20000,50000) ~"medium",
+                                n_ab > 50000 ~ "large")) %>% 
+    mutate(aco_save_diff = case_when(sav_rate > 0 ~ "Saving",
+                                     sav_rate < 0 ~ "Non-Saving")) %>% 
+    count(aco_size,aco_save_diff) %>% 
+    ggplot( aes(x=n,
+                y=aco_size,
+                fill = aco_size))+
+    xlab("Number of ACOs")+
+    ylab("ACO Size")+
+    scale_fill_discrete(name = "ACO Type")+
+    geom_col()+
+    facet_wrap(~ aco_save_diff)+
+    coord_flip()+
+    labs(title = "ACO <span style='color:#45f542'>Savings</span> and <span style='color:#f54242'>Losses</span>")+
+    theme(plot.title = element_markdown())+
+    theme(panel.background   = element_blank())
+}
+
+basic_function( aco_type = current_basic_a)
